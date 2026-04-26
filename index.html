@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:image" content="bg.png" />
+    <link rel="icon" type="image/png" href="bg.png"/>
+    <title>قُرَّاؤُنَا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --glass-blue: rgba(163, 186, 207, 0.5); 
+            --glass-red: rgba(255, 173, 173, 0.5);
+            --text-main: #1a252f;
+            --button-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; outline: none; border: none; }
+
+        body {
+            font-family: 'Amiri', serif;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Background: No stretching, no flexing */
+            background-image: url('bg.png');
+            background-color: #f0f4f8; /* Fallback color */
+            background-size: contain; 
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* Subtle overlay to keep text readable */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            z-index: -1;
+        }
+
+        #app-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .view-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, h2 { 
+            color: var(--text-main); 
+            text-align: center;
+            margin: 10px 0;
+        }
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.2rem; }
+
+        /* Centered Grid Logic */
+        .grid-parent {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .grid-layout {
+            display: grid;
+            gap: 20px;
+            width: auto; /* Shrink to fit content for centering */
+            max-width: 100%;
+        }
+
+        .home-grid { grid-template-columns: repeat(4, 220px); }
+        .hifaz-sub-grid { grid-template-columns: repeat(3, 250px); }
+
+        button {
+            font-family: 'Amiri', serif;
+            background: var(--glass-blue);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--text-main);
+            border: 0px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--button-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Hover animation: maintain transparency */
+        button:hover {
+            transform: translateY(-5px);
+            background: rgba(163, 186, 207, 0.65); /* Minimal increase */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-main-hifaz {
+            grid-column: 1 / -1;
+            height: 120px;
+            font-size: 2rem;
+        }
+
+        .btn-sub { height: 110px; font-size: 1.5rem; }
+
+        .numbers-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .btn-num {
+            font-family: 'Cairo', sans-serif;
+            width: 80px;
+            height: 80px;
+            font-size: 1.6rem;
+        }
+
+        .clicked { 
+            background-color: var(--glass-red) !important; 
+            color: #7b241c;
+        }
+
+        .btn-return {
+            width: 80%;
+            max-width: 600px;
+            height: 60px;
+            margin-top: 30px;
+            font-size: 1.3rem;
+            background: rgba(44, 62, 80, 0.8);
+            color: white;
+        }
+
+        /* Reset Button */
+        #secret-reset {
+            position: fixed; bottom: 0; left: 0;
+            width: 50px; height: 50px;
+            background: transparent; z-index: 10000;
+        }
+
+        /* Responsive behavior */
+        @media (max-width: 1000px) {
+            .home-grid { grid-template-columns: repeat(2, 1fr); width: 90%; }
+            .hifaz-sub-grid { grid-template-columns: repeat(2, 1fr); width: 90%; }
+            body { background-size: cover; overflow-y: auto; } /* Better for small vertical screens */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="secret-reset" onclick="resetData()"></div>
+
+    <div id="app-wrapper">
+        <div id="view-home" class="view-container">
+            <h1>قُرَّاؤُنَا</h1>
+            <div class="grid-parent">
+                <div class="grid-layout home-grid">
+                    <button class="btn-main-hifaz" onclick="navTo('a')">
+                        الحفاظ <i class="fas fa-book-open" style="margin-top: 5px;"></i>
+                    </button>
+                    <button class="btn-sub" onclick="navTo('b')">١٥ من الأعلى</button>
+                    <button class="btn-sub" onclick="navTo('c')">١٥ من الأسفل</button>
+                    <button class="btn-sub" onclick="navTo('d')">١٠ من الأعلى</button>
+                    <button class="btn-sub" onclick="navTo('e')">١٠ من الأسفل</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-submenu" class="view-container" style="display: none;">
+            <h2 id="submenu-title"></h2>
+            <div class="grid-parent">
+                <div id="submenu-buttons" class="grid-layout"></div>
+            </div>
+            <button class="btn-return" onclick="showHome()">رجوع للرئيسية</button>
+        </div>
+
+        <div id="view-numbers" class="view-container" style="display: none;">
+            <h2 id="numbers-title"></h2>
+            <div id="numbers-grid" class="numbers-container"></div>
+            <button id="back-to-cat" class="btn-return">رجوع للقسم</button>
+        </div>
+        <div id="imageModal" style="display: none; position: fixed; z-index: 20000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column;">
+            <span onclick="closeModal()" style="position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+            <img id="modalImg" style="max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2);">
+            <button class="btn-return" onclick="closeModal()" style="width: 200px; margin-top: 20px;">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        const state = JSON.parse(localStorage.getItem('hifz_v5')) || {};
+        let currentPageLetter = '';
+
+        const config = {
+            'a': { name: 'قسم الحفاظ', cats: [
+                { id: 'a', name: 'أسئلة أكمل', count: 60 }, { id: 'b', name: 'بدايات الصفحات', count: 10 },
+                { id: 'c', name: 'نهايات الصفحات', count: 20 }, { id: 'd', name: 'بداية التشابه', count: 10 },
+                { id: 'e', name: 'المتشابهات', count: 11 }, { id: 'f', name: 'أسئلة عامة', count: 12 }
+            ]},
+            'others': { cats: [
+                { id: 'a', name: 'أسئلة أكمل', count: 100 },
+                { id: 'b', name: 'بدايات الصفحات', count: 50 },
+                { id: 'c', name: 'نهايات الصفحات', count: 50 }
+            ]}
+        };
+
+        const otherTitles = { 'b':'١٥ من الأعلى', 'c':'١٥ من الأسفل', 'd':'١٠ من الأعلى', 'e':'١٠ من الأسفل' };
+
+        function navTo(letter) {
+            currentPageLetter = letter;
+            document.getElementById('view-home').style.display = 'none';
+            document.getElementById('view-submenu').style.display = 'flex';
+            const data = (letter === 'a') ? config['a'] : config['others'];
+            document.getElementById('submenu-title').innerText = (letter === 'a') ? data.name : otherTitles[letter];
+            const container = document.getElementById('submenu-buttons');
+            container.className = 'grid-layout ' + ((letter === 'a') ? 'hifaz-sub-grid' : 'home-grid');
+            container.innerHTML = '';
+            data.cats.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-sub';
+                btn.innerText = cat.name;
+                btn.onclick = () => showNumbers(cat.id, cat.name, cat.count);
+                container.appendChild(btn);
+            });
+        }
+
+        function showNumbers(catLetter, catName, count) {
+            document.getElementById('view-submenu').style.display = 'none';
+            document.getElementById('view-numbers').style.display = 'flex';
+            document.getElementById('numbers-title').innerText = catName;
+            const grid = document.getElementById('numbers-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= count; i++) {
+                const fileCode = `${currentPageLetter}${catLetter}${i}`;
+                const btn = document.createElement('button');
+                btn.className = 'btn-num';
+                if (state[fileCode]) btn.classList.add('clicked');
+                btn.innerText = i.toLocaleString('ar-EG');
+                
+                btn.onclick = () => {
+                    btn.classList.add('clicked');
+                    state[fileCode] = true;
+                    localStorage.setItem('hifz_v5', JSON.stringify(state));
+                    
+                    const modal = document.getElementById('imageModal');
+                    const modalImg = document.getElementById('modalImg');
+                    
+                    // This is the specific change you requested:
+                    const folder = fileCode.substring(0, 2); 
+                    modalImg.src = `${folder}/${fileCode}.jpg`;
+                    
+                    modal.style.display = "flex";
+                };
+                grid.appendChild(btn);
+            }
+            
+            document.getElementById('back-to-cat').onclick = () => {
+                document.getElementById('view-numbers').style.display = 'none';
+                document.getElementById('view-submenu').style.display = 'flex';
+            };
+        }
+
+        // Add this new function to close the popup
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+            document.getElementById('modalImg').src = ""; // Clear source to stop loading
+        }
+
+        function showHome() {
+            document.getElementById('view-submenu').style.display = 'none';
+            document.getElementById('view-home').style.display = 'flex';
+        }
+
+        function resetData() {
+            if(confirm("هل تريد تصفير جميع الألوان؟")) {
+                localStorage.removeItem('hifz_v5');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
